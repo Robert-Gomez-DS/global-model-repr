@@ -6,7 +6,7 @@ import numpy, torch, math, os
 from torch import nn
 from collections import OrderedDict
 from torchvision.models import resnet
-from torchvision.models.alexnet import model_urls as alexnet_model_urls
+import torchvision.models as models
 
 class CustomResNet(nn.Module):
     '''
@@ -175,7 +175,7 @@ if __name__ == '__main__':
     # models can be loaded into each of the custom nets.
     print('Loading alexnet')
     model = CustomAlexNet()
-    model.load_state_dict(model_zoo.load_url(alexnet_model_urls['alexnet']))
+    model.load_state_dict(model_zoo.load_url(torch.hub.load_state_dict_from_url(models.alexnet(pretrained=True).model_urls['alexnet'])))
     print('Loading resnet18')
     model = CustomResNet(18)
     model.load_state_dict(model_zoo.load_url(resnet.model_urls['resnet18']))
