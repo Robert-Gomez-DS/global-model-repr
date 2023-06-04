@@ -9,6 +9,27 @@
 # Distributed under terms of the MIT license.
 # Copyright (c) 2017 Megvii Technology Limited.
 
+
+
+import torch
+from torch.utils.cpp_extension import load
+
+try:
+    import os
+    from os.path import join as pjoin, dirname
+    root_dir = pjoin(dirname(__file__), 'src')
+    _prroi_pooling = load(
+        '_prroi_pooling',
+        sources=[
+            pjoin(root_dir, 'prroi_pooling_gpu.c'),
+            pjoin(root_dir, 'prroi_pooling_gpu_impl.cu')
+        ],
+        verbose=False
+    )
+except ImportError:
+    raise ImportError('Cannot compile Precise RoI Pooling library.')
+
+'''
 import torch
 import torch.autograd as ag
 
@@ -26,7 +47,7 @@ except ImportError:
 
 __all__ = ['prroi_pool2d']
 
-
+'''
 class PrRoIPool2DFunction(ag.Function):
     @staticmethod
     def forward(ctx, features, rois, pooled_height, pooled_width, spatial_scale):
